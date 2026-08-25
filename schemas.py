@@ -47,10 +47,6 @@ class RenameOrMoveObjectParams(ObjectIdParams):
     new_parent_id: str = Field("", description="Destination parent folder object ID to move into. Leave blank to keep in place.")
 
 
-class DeleteObjectParams(ObjectIdParams):
-    pass
-
-
 class DownloadDocumentParams(ObjectIdParams):
     pass
 

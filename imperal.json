@@ -3881,6 +3881,139 @@
       "long_running": false,
       "scopes": [],
       "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "checkin_document",
+      "description": "Check in a checked-out document, saving it as a new version and releasing the lock (or keeping it checked out for another iterative save).",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          },
+          "keep_checked_out": {
+            "default": false,
+            "description": "If true, keep the document checked out after this checkin (for iterative saves).",
+            "title": "Keep Checked Out",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "CheckinParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "checked_out": {
+            "title": "Checked Out",
+            "type": "boolean"
+          },
+          "checked_out_by": {
+            "default": "",
+            "title": "Checked Out By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id",
+          "checked_out"
+        ],
+        "title": "CheckoutResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.checkin_document",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
     }
   ],
   "signals": [],

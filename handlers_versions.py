@@ -75,3 +75,28 @@ async def fn_cancel_checkout(ctx, params: CancelCheckoutParams) -> ActionResult:
     except dc.DocumentumError as exc:
         return ActionResult.error(str(exc))
     return ActionResult.success(data=CheckoutResult(object_id=params.object_id, checked_out=False).model_dump(), summary="Checkout cancelled.")
+
+
+@chat.function(
+    "checkin_document",
+    action_type="write",
+    event="documentum-connector.checkin_document",
+    data_model=CheckoutResult,
+    description="Check in a checked-out document, saving it as a new version and releasing the lock (or keeping it checked out for another iterative save).",
+)
+async def fn_checkin_document(ctx, params: CheckinParams) -> ActionResult:
+    """Check in a Documentum document, completing the checkout/checkin cycle."""
+    conn = await _resolve_connection(ctx, params.connection_id)
+    client = _client_for(conn)
+    try:
+        await client.request(
+            "PUT", f"/objects/{params.object_id}",
+            json_body={"checkin": True, "keep-checked-out": params.keep_checked_out},
+        )
+    except dc.DocumentumError as exc:
+        return ActionResult.error(str(exc))
+    summary = "Checked in; still checked out for another save." if params.keep_checked_out else "Checked in and lock released."
+    return ActionResult.success(
+        data=CheckoutResult(object_id=params.object_id, checked_out=params.keep_checked_out).model_dump(),
+        summary=summary,
+    )
