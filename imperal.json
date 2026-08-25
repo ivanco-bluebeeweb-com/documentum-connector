@@ -1,0 +1,3962 @@
+{
+  "manifest_schema_version": 3,
+  "sdk_version": "5.11.0",
+  "app_id": "documentum-connector",
+  "version": "0.1.0",
+  "name": "Documentum",
+  "description": "Connect your own OpenText Documentum repository to browse and manage Cabinets, Folders, Documents, Versions (checkout/checkin), Permissions, Lifecycles, and run a content-health audit.",
+  "icon": "icon.svg",
+  "actions_explicit": true,
+  "system": false,
+  "capabilities": [
+    "documentum:read",
+    "documentum:write"
+  ],
+  "tools": [
+    {
+      "name": "connect_documentum",
+      "description": "Connect a Documentum repository via base URL, repository name, and username/password.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "label": {
+            "default": "",
+            "description": "Friendly connection label, e.g. 'Acme Documentum'.",
+            "title": "Label",
+            "type": "string"
+          },
+          "base_url": {
+            "description": "Documentum REST Services base URL, e.g. 'https://dctm.acme.com:8080/dctm-rest'.",
+            "title": "Base Url",
+            "type": "string"
+          },
+          "repository_name": {
+            "description": "Repository (docbase) name, e.g. 'acme_prod'.",
+            "title": "Repository Name",
+            "type": "string"
+          },
+          "username": {
+            "description": "Documentum username with REST access to this repository.",
+            "title": "Username",
+            "type": "string"
+          },
+          "password": {
+            "description": "Documentum password for that username.",
+            "title": "Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "base_url",
+          "repository_name",
+          "username",
+          "password"
+        ],
+        "title": "ConnectDocumentumParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "connection_id": {
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "repository_name": {
+            "title": "Repository Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "connection_id",
+          "label",
+          "repository_name"
+        ],
+        "title": "DocumentumConnection",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.connect",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "disconnect_documentum",
+      "description": "Disconnect a saved Documentum repository connection.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "description": "Saved Documentum connection ID to remove from Imperal.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "connection_id"
+        ],
+        "title": "DisconnectDocumentumParams",
+        "type": "object"
+      },
+      "return_schema": {},
+      "event": "documentum-connector.disconnect",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "list_connections",
+      "description": "List the connected Documentum repositories.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {},
+        "title": "NoParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DocumentumConnection": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "connection_id": {
+                "title": "Connection Id",
+                "type": "string"
+              },
+              "label": {
+                "title": "Label",
+                "type": "string"
+              },
+              "repository_name": {
+                "title": "Repository Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "connection_id",
+              "label",
+              "repository_name"
+            ],
+            "title": "DocumentumConnection",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "connections": {
+            "items": {
+              "$ref": "#/$defs/DocumentumConnection"
+            },
+            "title": "Connections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "connections"
+        ],
+        "title": "ConnectionList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.list_connections",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "list_cabinets",
+      "description": "List top-level Cabinets in the connected repository.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          }
+        },
+        "title": "ListCabinetsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DocumentumObject": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "object_id": {
+                "title": "Object Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "object_type": {
+                "default": "",
+                "title": "Object Type",
+                "type": "string"
+              },
+              "parent_id": {
+                "default": "",
+                "title": "Parent Id",
+                "type": "string"
+              },
+              "size_bytes": {
+                "default": 0,
+                "title": "Size Bytes",
+                "type": "integer"
+              },
+              "modify_date": {
+                "default": "",
+                "title": "Modify Date",
+                "type": "string"
+              },
+              "checked_out_by": {
+                "default": "",
+                "title": "Checked Out By",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "object_id",
+              "name"
+            ],
+            "title": "DocumentumObject",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "objects": {
+            "items": {
+              "$ref": "#/$defs/DocumentumObject"
+            },
+            "title": "Objects",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "objects"
+        ],
+        "title": "ObjectList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.list_cabinets",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "get_object",
+      "description": "Read one Documentum object's (folder or document) metadata in full.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "ObjectIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "object_type": {
+            "default": "",
+            "title": "Object Type",
+            "type": "string"
+          },
+          "parent_id": {
+            "default": "",
+            "title": "Parent Id",
+            "type": "string"
+          },
+          "size_bytes": {
+            "default": 0,
+            "title": "Size Bytes",
+            "type": "integer"
+          },
+          "modify_date": {
+            "default": "",
+            "title": "Modify Date",
+            "type": "string"
+          },
+          "checked_out_by": {
+            "default": "",
+            "title": "Checked Out By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id",
+          "name"
+        ],
+        "title": "DocumentumObject",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.get_object",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "list_folder_contents",
+      "description": "List the folders and documents inside a folder or cabinet.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Max child objects to return (1-500).",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "ListFolderContentsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DocumentumObject": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "object_id": {
+                "title": "Object Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "object_type": {
+                "default": "",
+                "title": "Object Type",
+                "type": "string"
+              },
+              "parent_id": {
+                "default": "",
+                "title": "Parent Id",
+                "type": "string"
+              },
+              "size_bytes": {
+                "default": 0,
+                "title": "Size Bytes",
+                "type": "integer"
+              },
+              "modify_date": {
+                "default": "",
+                "title": "Modify Date",
+                "type": "string"
+              },
+              "checked_out_by": {
+                "default": "",
+                "title": "Checked Out By",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "object_id",
+              "name"
+            ],
+            "title": "DocumentumObject",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "objects": {
+            "items": {
+              "$ref": "#/$defs/DocumentumObject"
+            },
+            "title": "Objects",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "objects"
+        ],
+        "title": "ObjectList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.list_folder_contents",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "create_folder",
+      "description": "Create a new folder inside an existing folder or cabinet.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "New folder name, e.g. 'Q3 Contracts'.",
+            "title": "Name",
+            "type": "string"
+          },
+          "parent_id": {
+            "description": "Parent folder/cabinet object ID to create the folder inside.",
+            "title": "Parent Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "parent_id"
+        ],
+        "title": "CreateFolderParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "object_type": {
+            "default": "",
+            "title": "Object Type",
+            "type": "string"
+          },
+          "parent_id": {
+            "default": "",
+            "title": "Parent Id",
+            "type": "string"
+          },
+          "size_bytes": {
+            "default": 0,
+            "title": "Size Bytes",
+            "type": "integer"
+          },
+          "modify_date": {
+            "default": "",
+            "title": "Modify Date",
+            "type": "string"
+          },
+          "checked_out_by": {
+            "default": "",
+            "title": "Checked Out By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id",
+          "name"
+        ],
+        "title": "DocumentumObject",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.create_folder",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "rename_or_move_object",
+      "description": "Rename an object and/or move it to a new parent folder.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          },
+          "name": {
+            "default": "",
+            "description": "New object name. Leave blank to keep the current name.",
+            "title": "Name",
+            "type": "string"
+          },
+          "new_parent_id": {
+            "default": "",
+            "description": "Destination parent folder object ID to move into. Leave blank to keep in place.",
+            "title": "New Parent Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "RenameOrMoveObjectParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "object_type": {
+            "default": "",
+            "title": "Object Type",
+            "type": "string"
+          },
+          "parent_id": {
+            "default": "",
+            "title": "Parent Id",
+            "type": "string"
+          },
+          "size_bytes": {
+            "default": 0,
+            "title": "Size Bytes",
+            "type": "integer"
+          },
+          "modify_date": {
+            "default": "",
+            "title": "Modify Date",
+            "type": "string"
+          },
+          "checked_out_by": {
+            "default": "",
+            "title": "Checked Out By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id",
+          "name"
+        ],
+        "title": "DocumentumObject",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.rename_or_move_object",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "delete_object",
+      "description": "Permanently delete a folder or document. Cannot be undone.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "ObjectIdParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "deleted": {
+            "title": "Deleted",
+            "type": "boolean"
+          },
+          "item_id": {
+            "default": "",
+            "title": "Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "deleted"
+        ],
+        "title": "DeleteResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.delete_object",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "download_document",
+      "description": "Download a document's primary content, base64-encoded.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "DownloadDocumentParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "content_base64": {
+            "title": "Content Base64",
+            "type": "string"
+          },
+          "content_type": {
+            "default": "application/octet-stream",
+            "title": "Content Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "name",
+          "content_base64"
+        ],
+        "title": "DownloadResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.download_document",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "upload_document",
+      "description": "Upload a new document (base64-encoded content) into a folder.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "Document file name, e.g. 'contract.pdf'.",
+            "title": "Name",
+            "type": "string"
+          },
+          "parent_folder_id": {
+            "description": "Folder object ID to upload the document into.",
+            "title": "Parent Folder Id",
+            "type": "string"
+          },
+          "content_base64": {
+            "description": "File content, base64-encoded.",
+            "title": "Content Base64",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "parent_folder_id",
+          "content_base64"
+        ],
+        "title": "UploadDocumentParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id",
+          "name"
+        ],
+        "title": "UploadResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.upload_document",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "upload_document_version",
+      "description": "Check in a new version of an existing document (base64-encoded content).",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          },
+          "name": {
+            "description": "File name for this new version.",
+            "title": "Name",
+            "type": "string"
+          },
+          "content_base64": {
+            "description": "New version's file content, base64-encoded.",
+            "title": "Content Base64",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id",
+          "name",
+          "content_base64"
+        ],
+        "title": "UploadVersionParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id",
+          "name"
+        ],
+        "title": "UploadResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.upload_document_version",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "get_lifecycle_state",
+      "description": "Read an object's current lifecycle name and state (e.g. Draft, Review, Approved).",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "GetLifecycleStateParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "lifecycle_name": {
+            "default": "",
+            "title": "Lifecycle Name",
+            "type": "string"
+          },
+          "current_state": {
+            "default": "",
+            "title": "Current State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id"
+        ],
+        "title": "LifecycleState",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.get_lifecycle_state",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "promote_lifecycle",
+      "description": "Promote an object to the next lifecycle state (e.g. Draft -> Review).",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "PromoteLifecycleParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "lifecycle_name": {
+            "default": "",
+            "title": "Lifecycle Name",
+            "type": "string"
+          },
+          "current_state": {
+            "default": "",
+            "title": "Current State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id"
+        ],
+        "title": "LifecycleState",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.promote_lifecycle",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "demote_lifecycle",
+      "description": "Demote an object to its previous lifecycle state.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "DemoteLifecycleParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "lifecycle_name": {
+            "default": "",
+            "title": "Lifecycle Name",
+            "type": "string"
+          },
+          "current_state": {
+            "default": "",
+            "title": "Current State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id"
+        ],
+        "title": "LifecycleState",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.demote_lifecycle",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "list_permissions",
+      "description": "List the ACL permission grants (who can see/modify/delete) on an object.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "ListPermissionsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DocumentumPermission": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "accessor_name": {
+                "title": "Accessor Name",
+                "type": "string"
+              },
+              "permission_level": {
+                "title": "Permission Level",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "accessor_name",
+              "permission_level"
+            ],
+            "title": "DocumentumPermission",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "permissions": {
+            "items": {
+              "$ref": "#/$defs/DocumentumPermission"
+            },
+            "title": "Permissions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "permissions"
+        ],
+        "title": "PermissionList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.list_permissions",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "grant_permission",
+      "description": "Grant an ACL permission level (e.g. Read, Write, Delete) to a user or group on an object.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          },
+          "accessor_name": {
+            "description": "User or group name to grant access to.",
+            "title": "Accessor Name",
+            "type": "string"
+          },
+          "permission_level": {
+            "description": "Permission level: NONE, BROWSE, READ, RELATE, VERSION, WRITE, or DELETE.",
+            "title": "Permission Level",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id",
+          "accessor_name",
+          "permission_level"
+        ],
+        "title": "GrantPermissionParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "accessor_name": {
+            "title": "Accessor Name",
+            "type": "string"
+          },
+          "permission_level": {
+            "title": "Permission Level",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "accessor_name",
+          "permission_level"
+        ],
+        "title": "DocumentumPermission",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.grant_permission",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "revoke_permission",
+      "description": "Revoke a user's or group's ACL permission on an object.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          },
+          "accessor_name": {
+            "description": "User or group name to revoke access from.",
+            "title": "Accessor Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id",
+          "accessor_name"
+        ],
+        "title": "RevokePermissionParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "accessor_name": {
+            "title": "Accessor Name",
+            "type": "string"
+          },
+          "permission_level": {
+            "title": "Permission Level",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "accessor_name",
+          "permission_level"
+        ],
+        "title": "DocumentumPermission",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.revoke_permission",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "search_documents",
+      "description": "Free-text search across object names and content in the repository.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "query": {
+            "description": "Free-text search across object names and content, e.g. 'contract 2026'.",
+            "title": "Query",
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "description": "Max results to return (1-100).",
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "SearchDocumentsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DocumentumObject": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "object_id": {
+                "title": "Object Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "object_type": {
+                "default": "",
+                "title": "Object Type",
+                "type": "string"
+              },
+              "parent_id": {
+                "default": "",
+                "title": "Parent Id",
+                "type": "string"
+              },
+              "size_bytes": {
+                "default": 0,
+                "title": "Size Bytes",
+                "type": "integer"
+              },
+              "modify_date": {
+                "default": "",
+                "title": "Modify Date",
+                "type": "string"
+              },
+              "checked_out_by": {
+                "default": "",
+                "title": "Checked Out By",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "object_id",
+              "name"
+            ],
+            "title": "DocumentumObject",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "objects": {
+            "items": {
+              "$ref": "#/$defs/DocumentumObject"
+            },
+            "title": "Objects",
+            "type": "array"
+          },
+          "total_found": {
+            "default": 0,
+            "title": "Total Found",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "objects"
+        ],
+        "title": "SearchResults",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.search_documents",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "search_dql",
+      "description": "Run a raw Documentum Query Language (DQL) SELECT statement for advanced/precise searches.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "dql": {
+            "description": "Raw Documentum Query Language (DQL) statement, e.g. \"SELECT r_object_id, object_name FROM dm_document WHERE folder('/Contracts')\".",
+            "title": "Dql",
+            "type": "string"
+          }
+        },
+        "required": [
+          "dql"
+        ],
+        "title": "SearchDqlParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DocumentumObject": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "object_id": {
+                "title": "Object Id",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
+              "object_type": {
+                "default": "",
+                "title": "Object Type",
+                "type": "string"
+              },
+              "parent_id": {
+                "default": "",
+                "title": "Parent Id",
+                "type": "string"
+              },
+              "size_bytes": {
+                "default": 0,
+                "title": "Size Bytes",
+                "type": "integer"
+              },
+              "modify_date": {
+                "default": "",
+                "title": "Modify Date",
+                "type": "string"
+              },
+              "checked_out_by": {
+                "default": "",
+                "title": "Checked Out By",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "object_id",
+              "name"
+            ],
+            "title": "DocumentumObject",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "objects": {
+            "items": {
+              "$ref": "#/$defs/DocumentumObject"
+            },
+            "title": "Objects",
+            "type": "array"
+          },
+          "total_found": {
+            "default": 0,
+            "title": "Total Found",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "objects"
+        ],
+        "title": "SearchResults",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.search_dql",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "audit_content_health",
+      "description": "Scan a folder and flag content-health issues: long-checked-out documents, empty documents, and very large files.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "folder_id": {
+            "description": "Folder or cabinet object ID to audit.",
+            "title": "Folder Id",
+            "type": "string"
+          },
+          "checkout_days": {
+            "default": 30,
+            "description": "Flag documents checked out longer than this many days.",
+            "title": "Checkout Days",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "folder_id"
+        ],
+        "title": "AuditContentParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "ContentAuditFinding": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "finding_type": {
+                "title": "Finding Type",
+                "type": "string"
+              },
+              "item_name": {
+                "title": "Item Name",
+                "type": "string"
+              },
+              "detail": {
+                "title": "Detail",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "finding_type",
+              "item_name",
+              "detail"
+            ],
+            "title": "ContentAuditFinding",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "folder_id": {
+            "title": "Folder Id",
+            "type": "string"
+          },
+          "items_scanned": {
+            "title": "Items Scanned",
+            "type": "integer"
+          },
+          "findings": {
+            "items": {
+              "$ref": "#/$defs/ContentAuditFinding"
+            },
+            "title": "Findings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "folder_id",
+          "items_scanned",
+          "findings"
+        ],
+        "title": "ContentAudit",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.audit_content_health",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "list_versions",
+      "description": "List the version tree of a document.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "ListVersionsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "DocumentumVersion": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Status"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "version_label": {
+                "title": "Version Label",
+                "type": "string"
+              },
+              "object_id": {
+                "title": "Object Id",
+                "type": "string"
+              },
+              "modify_date": {
+                "default": "",
+                "title": "Modify Date",
+                "type": "string"
+              },
+              "modified_by": {
+                "default": "",
+                "title": "Modified By",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "version_label",
+              "object_id"
+            ],
+            "title": "DocumentumVersion",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "versions": {
+            "items": {
+              "$ref": "#/$defs/DocumentumVersion"
+            },
+            "title": "Versions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "versions"
+        ],
+        "title": "VersionList",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.list_versions",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "checkout_document",
+      "description": "Check out a document, locking it for editing by the connected user.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "CheckoutParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "checked_out": {
+            "title": "Checked Out",
+            "type": "boolean"
+          },
+          "checked_out_by": {
+            "default": "",
+            "title": "Checked Out By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id",
+          "checked_out"
+        ],
+        "title": "CheckoutResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.checkout_document",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    },
+    {
+      "name": "cancel_checkout",
+      "description": "Cancel a checkout without saving changes, releasing the lock.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "connection_id": {
+            "default": "",
+            "description": "Optional saved Documentum repository connection ID. Omit to use the first connected repository.",
+            "title": "Connection Id",
+            "type": "string"
+          },
+          "object_id": {
+            "description": "Documentum object ID (r_object_id), a 16-character hex string.",
+            "title": "Object Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "object_id"
+        ],
+        "title": "CancelCheckoutParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Status"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "object_id": {
+            "title": "Object Id",
+            "type": "string"
+          },
+          "checked_out": {
+            "title": "Checked Out",
+            "type": "boolean"
+          },
+          "checked_out_by": {
+            "default": "",
+            "title": "Checked Out By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "object_id",
+          "checked_out"
+        ],
+        "title": "CheckoutResult",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "documentum-connector.cancel_checkout",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "documentum"
+    }
+  ],
+  "signals": [],
+  "schedules": [],
+  "required_scopes": [],
+  "icon_size_bytes": 299,
+  "lifecycle": {
+    "health_check": {
+      "interval_sec": 60
+    }
+  },
+  "secrets": [
+    {
+      "name": "documentum_connections",
+      "description": "JSON list of connected Documentum repositories and their username/password (Basic Auth, sent on every request). Managed only through connect_documentum and disconnect_documentum.",
+      "required": true,
+      "write_mode": "both",
+      "max_bytes": 65536,
+      "scope": "user",
+      "rotation_hint_days": 90
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "secrets",
+      "slot": "right",
+      "title": "Secrets",
+      "tree": {},
+      "icon": "KeyRound",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "documentum_sidebar",
+      "slot": "left",
+      "title": "Documentum",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": false
+    },
+    {
+      "panel_id": "documentum_connect_help",
+      "slot": "center",
+      "title": "Как подключить Documentum?",
+      "tree": {},
+      "icon": "HelpCircle",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "documentum_cabinets",
+      "slot": "center",
+      "title": "Cabinets",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "documentum_audit",
+      "slot": "center",
+      "title": "Content audit",
+      "tree": {},
+      "icon": "",
+      "refresh": "manual",
+      "center_overlay": true
+    },
+    {
+      "panel_id": "documentum_settings",
+      "slot": "center",
+      "title": "Documentum settings",
+      "tree": {},
+      "icon": "Settings",
+      "refresh": "manual",
+      "center_overlay": true
+    }
+  ]
+}
