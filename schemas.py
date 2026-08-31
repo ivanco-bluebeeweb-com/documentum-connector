@@ -120,21 +120,29 @@ class AuditContentParams(ConnectionRefParams):
 # ---- SDL result entities ----
 
 class DeleteResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     deleted: bool
     item_id: str = ""
 
 
 class DocumentumConnection(sdl.Entity):
+    id: str = ""
+    title: str = ""
     connection_id: str
     label: str
     repository_name: str
 
 
 class ConnectionList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     connections: list[DocumentumConnection]
 
 
 class DocumentumObject(sdl.Entity):
+    id: str = ""
+    title: str = ""
     object_id: str
     name: str
     object_type: str = ""
@@ -145,21 +153,29 @@ class DocumentumObject(sdl.Entity):
 
 
 class ObjectList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     objects: list[DocumentumObject]
 
 
 class UploadResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     object_id: str
     name: str
 
 
 class DownloadResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     name: str
     content_base64: str
     content_type: str = "application/octet-stream"
 
 
 class DocumentumVersion(sdl.Entity):
+    id: str = ""
+    title: str = ""
     version_label: str
     object_id: str
     modify_date: str = ""
@@ -167,42 +183,58 @@ class DocumentumVersion(sdl.Entity):
 
 
 class VersionList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     versions: list[DocumentumVersion]
 
 
 class CheckoutResult(sdl.Entity):
+    id: str = ""
+    title: str = ""
     object_id: str
     checked_out: bool
     checked_out_by: str = ""
 
 
 class DocumentumPermission(sdl.Entity):
+    id: str = ""
+    title: str = ""
     accessor_name: str
     permission_level: str
 
 
 class PermissionList(sdl.Entity):
+    id: str = ""
+    title: str = ""
     permissions: list[DocumentumPermission]
 
 
 class LifecycleState(sdl.Entity):
+    id: str = ""
+    title: str = ""
     object_id: str
     lifecycle_name: str = ""
     current_state: str = ""
 
 
 class SearchResults(sdl.Entity):
+    id: str = ""
+    title: str = ""
     objects: list[DocumentumObject]
     total_found: int = 0
 
 
 class ContentAuditFinding(sdl.Entity):
+    id: str = ""
+    title: str = ""
     finding_type: str
     item_name: str
     detail: str
 
 
 class ContentAudit(sdl.Entity):
+    id: str = ""
+    title: str = ""
     folder_id: str
     items_scanned: int
     findings: list[ContentAuditFinding]
