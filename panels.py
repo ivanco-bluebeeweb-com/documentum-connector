@@ -23,8 +23,7 @@ def _field(label: str, node: ui.UINode) -> ui.UINode:
 
 def _settings_button() -> ui.UINode:
     return ui.Button(
-        "App settings", variant="secondary", size="sm", full_width=True,
-        icon="Settings", on_click=ui.Call("__panel__documentum_settings"),
+        "App settings", variant="secondary", size="sm", icon="Settings", on_click=ui.Call("__panel__documentum_settings"),
     )
 
 
@@ -47,9 +46,9 @@ async def documentum_sidebar(ctx, **kwargs) -> ui.UINode:
         ])
     return ui.Stack(direction="v", gap=3, align="stretch", children=[
         ui.Text(f"Подключено: {connections[0].get('label') or connections[0].get('repository_name', '')}", variant="body"),
-        ui.Button("Cabinets", variant="secondary", size="sm", full_width=True, icon="Folder",
+        ui.Button("Cabinets", variant="secondary", size="sm", icon="Folder",
                   on_click=ui.Call("__panel__documentum_cabinets")),
-        ui.Button("Content audit", variant="secondary", size="sm", full_width=True, icon="ShieldCheck",
+        ui.Button("Content audit", variant="secondary", size="sm", icon="ShieldCheck",
                   on_click=ui.Call("__panel__documentum_audit")),
         _settings_button(),
     ])
